@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Morse Code Encryptor Decryptor</string>
+    <string name="cipher_morse">Cipher Morse</string>
+    <string name="input_area_of_morse_code_encryption">Input Area of Morse Code Encryption</string>
+    <string name="type_your_message_here">Type your message here....</string>
+    <string name="customize_symbols">Customize Symbols</string>
+    <string name="dash_symbol">Dash Symbol :</string>
+    <string name="type_something">Enter specific symbol…</string>
+    <string name="dot_symbol">Dot Symbol :</string>
+    <string name="save_symbols">Save Symbols</string>
+    <string name="set_defaults">Set Defaults</string>
+    <string name="encryption">Encryption</string>
+    <string name="output_area_of_morse_code_encryption">Output Of Morse Code Encryption</string>
+    <string name="results_will_be_shown_here">Results will be shown here.</string>
+    <string name="save_to_clipboard">Save To Clipboard</string>
+    <string name="encrypt">Encrypt</string>
+    <string name="input_area_of_morse_code_decryption">Input Area of Morse Code Decryption</string>
+    <string name="decrypt">Decrypt</string>
+    <string name="decryption">Decryption</string>
+    <string name="output_area_of_morse_code_decryption">Output of Morse Code Decryption</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="go_to_decryption_menu">Go to Decryption Menu</string>
+    <string name="copy">Copy</string>
+    <string name="go_to_encryption_menu">Go to Encryption Menu</string>
+</resources>
