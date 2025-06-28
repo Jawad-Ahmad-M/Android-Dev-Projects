@@ -1,15 +1,17 @@
 package com.MazeRunner.app;
 
+//import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
+
 public class MazeView extends View {
-    private MazeCellMaker[][] mazegrid;
-    private int rows, columns;
-    private int cellSize;
+    private final MazeCellMaker[][] mazegrid;
+    private final int rows, columns;
+    private float cellSize;
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -17,11 +19,11 @@ public class MazeView extends View {
         cellSize = Math.min(w / columns, h / rows);
     }
     private int playerX, playerY;
+    private final Paint wallPaint;
+    private final Paint pathPaint;
+    private final Paint playerPaint;
+    private final Paint goalPaint;
 
-    private Paint wallPaint;
-    private Paint pathPaint;
-    private Paint playerPaint;
-    private Paint goalPaint;
 
     public MazeView(Context context, MazeCellMaker[][] mazegrid, int rows, int columns, int playerX, int playerY) {
         super(context);
@@ -42,6 +44,7 @@ public class MazeView extends View {
 
         goalPaint = new Paint();
         goalPaint.setColor(Color.parseColor("#FFD700"));
+
     }
 
     @Override
@@ -50,10 +53,10 @@ public class MazeView extends View {
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                int left = j * cellSize;
-                int top = i * cellSize;
-                int right = left + cellSize;
-                int bottom = top + cellSize;
+                float left = j * cellSize;
+                float top = i * cellSize;
+                float right = left + cellSize;
+                float bottom = top + cellSize;
 
                 if (mazegrid[i][j].isWall) {
                     canvas.drawRect(left, top, right, bottom, wallPaint);

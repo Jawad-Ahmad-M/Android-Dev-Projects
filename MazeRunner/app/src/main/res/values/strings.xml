@@ -5,4 +5,10 @@
     <string name="down">↓</string>
     <string name="left">←</string>
     <string name="up">↑</string>
+    <string name="easy">Easy</string>
+    <string name="standard">Standard</string>
+    <string name="difficult">Difficult</string>
+    <string name="ultra_hard">Ultra Hard</string>
+    <string name="select_difficulty_level">Select Difficulty Level</string>
+    <string name="back">Back</string>
 </resources>

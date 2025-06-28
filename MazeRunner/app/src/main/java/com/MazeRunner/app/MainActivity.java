@@ -3,8 +3,10 @@ package com.MazeRunner.app;
 //import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 //import android.view.View;
+import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -18,12 +20,16 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private  MazeCellMaker[][] mazegrid;
+
+    int scale;
     int X_coordinates;
     int Y_coordinates;
     private MazeView mazeView;
 
     private int rows,columns;
     Random rand = new Random();
+
+    int use = 1;
     private void new_mazes(int scale){
         initialize_Maze_Game(scale,scale);
         generate_Maze_with_Prims_algorithm();
@@ -37,21 +43,37 @@ public class MainActivity extends AppCompatActivity {
         mazeContainer.addView(mazeView);
         place_goal_cell();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent scaleValueImported = getIntent();
+        scale = scaleValueImported.getIntExtra("scaleValue",19);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new_mazes(15);
+        new_mazes(scale);
 
         Button btn_up = findViewById(R.id.btnUp);
         Button btn_down = findViewById(R.id.btnDown);
         Button btn_left = findViewById(R.id.btnLeft);
         Button btn_right = findViewById(R.id.btnRight);
+        Button btnBack = findViewById(R.id.btnBack);
 
         btn_up.setOnClickListener(v -> movement("up"));
         btn_down.setOnClickListener(v -> movement("down"));
         btn_right.setOnClickListener(v -> movement("right"));
         btn_left.setOnClickListener(v -> movement("left"));
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent setDifficultyLevelActivity = new Intent(MainActivity.this, difficultyLevelScreen.class);
+                startActivity(setDifficultyLevelActivity);
+            }
+        });
+
+
+
 //        btn_up.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -113,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
             
             if (mazegrid[X_coordinates][Y_coordinates].isGoal){
                 Toast.makeText(this, "\uD83C\uDFAF You reached the goal! Level Complete!", Toast.LENGTH_SHORT).show();
-                new_mazes(15);
+                new_mazes(scale);
             }
         }
         else{
@@ -157,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
             int[] wall = frontier.remove(rand.nextInt(frontier.size()));
             int row = wall[0];
             int column = wall[1];
+
             List<int[]> neighbors = getVisitedNeighbors(row, column);
 
             if (!neighbors.isEmpty()) {
