@@ -174,6 +174,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if (v.getId() == R.id.btn_go_to_decryption){
             try {
             Intent intent = new Intent(MainActivity.this, Decryption.class);
+            intent.putExtra("dashSymbol" ,dash_tv.getText().toString());
+            intent.putExtra("dotSymbol" ,dot_tv.getText().toString());
             startActivity(intent);
             } catch (Exception e){
                 Toast.makeText(this, "error in loading other files",Toast.LENGTH_LONG).show();
@@ -187,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     encryption(input_for_encryption.getText().toString());
                 } else if (v.getId() == R.id.btn_save_symbols){
                     set_saved_symbols(dot_tv.getText().toString(),dash_tv.getText().toString());
+
                 }
             }
         }

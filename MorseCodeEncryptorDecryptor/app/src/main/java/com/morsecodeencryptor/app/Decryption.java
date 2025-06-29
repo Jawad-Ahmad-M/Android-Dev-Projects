@@ -26,6 +26,7 @@ public class Decryption extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.decryption_app_layout);
 
+
         input_for_decryption = findViewById(R.id.edit_text_for_input_for_decryption);
         result_tv = findViewById(R.id.tv_output_results_of_decryption);
         dot_tv = findViewById(R.id.input_for_dot_symbol_decryption);
@@ -36,11 +37,25 @@ public class Decryption extends AppCompatActivity implements View.OnClickListene
         Button save_symbols = findViewById(R.id.btn_save_symbols);
         Button save_to_clipboard = findViewById(R.id.btn_save_to_clipboard);
         Button move_to_encryption = findViewById(R.id.btn_go_to_encryption);
+
         assignOnClickFunction(Encrypt);
         assignOnClickFunction(set_default);
         assignOnClickFunction(save_symbols);
         assignOnClickFunction(save_to_clipboard);
         assignOnClickFunction(move_to_encryption);
+
+
+        String dashSymbolFromIntent = getIntent().getStringExtra("dashSymbol");
+        String dotSymbolFromIntent = getIntent().getStringExtra("dotSymbol");
+
+        if (dashSymbolFromIntent != null && dotSymbolFromIntent != null){
+            dot_tv.setText(dotSymbolFromIntent);
+            dash_tv.setText(dashSymbolFromIntent);
+            setDash_symbol(dashSymbolFromIntent);
+            setDot_symbol(dotSymbolFromIntent);
+            set_saved_symbols(dotSymbolFromIntent,dashSymbolFromIntent);
+        }
+
     }
 
     void assignOnClickFunction(Button btn) {
