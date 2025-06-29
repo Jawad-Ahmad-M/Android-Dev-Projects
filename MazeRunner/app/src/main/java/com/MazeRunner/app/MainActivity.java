@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private int rows,columns;
     Random rand = new Random();
 
-    int use = 1;
     private void new_mazes(int scale){
         initialize_Maze_Game(scale,scale);
         generate_Maze_with_Prims_algorithm();
@@ -40,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 FrameLayout.LayoutParams.MATCH_PARENT
         ));
         FrameLayout mazeContainer = findViewById(R.id.frame_layout_container_for_maze);
+        mazeContainer.removeAllViews();
         mazeContainer.addView(mazeView);
         place_goal_cell();
     }
@@ -71,46 +71,30 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(setDifficultyLevelActivity);
             }
         });
-
-
-
-//        btn_up.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                movement(X_coordinates,Y_coordinates,"up");
-//            }
-//        });
-//
-//        btn_right.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                movement(X_coordinates,Y_coordinates,"right");
-//            }
-//        });
-//
-//        btn_left.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                movement(X_coordinates,Y_coordinates,"left");
-//            }
-//        });
-//
-//        btn_down.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                movement(X_coordinates,Y_coordinates,"down");
-//            }
-//        });
     }
+
+
     private void place_goal_cell(){
         int goal_row = 1 + 2 * rand.nextInt((rows - 1) / 2);
         int goal_column = 1 + 2 * rand.nextInt((columns - 1) / 2);
         if (X_coordinates != goal_row || Y_coordinates != goal_column){
-            mazegrid[(goal_row)][goal_column].isGoal = true;
+            mazegrid[(goal_row)][goal_column].setGoal(true);
         } else{
             place_goal_cell();
         }
     }
+
+    private void revealFog(int XOrdinates, int YOrdinates){
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1 ; j++) {
+                int newX = i + XOrdinates;
+                int newY = j + YOrdinates;
+                mazegrid[newX][newY].setVisible(true);
+            }
+        }
+    }
+
+
     private void movement(String direction){
         int new_X = X_coordinates;
         int new_Y = Y_coordinates;
@@ -128,12 +112,13 @@ public class MainActivity extends AppCompatActivity {
                 new_Y = new_Y + 1;
                 break;
         }
-        if (isInBounds(new_X,new_Y) && !mazegrid[new_X][new_Y].isWall){
+        if (isInBounds(new_X,new_Y) && !mazegrid[new_X][new_Y].isWall()){
             X_coordinates = new_X;
             Y_coordinates = new_Y;
             mazeView.updatePlayerPosition(X_coordinates,Y_coordinates);
+            revealFog(X_coordinates,Y_coordinates);
             
-            if (mazegrid[X_coordinates][Y_coordinates].isGoal){
+            if (mazegrid[X_coordinates][Y_coordinates].isGoal()){
                 Toast.makeText(this, "\uD83C\uDFAF You reached the goal! Level Complete!", Toast.LENGTH_SHORT).show();
                 new_mazes(scale);
             }
@@ -142,6 +127,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "There is wall ahead, Can't Move There.",Toast.LENGTH_LONG).show();
         }
     }
+
+
 
     public void initialize_Maze_Game(int rows, int columns){
         this.rows = rows;
@@ -152,11 +139,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     private  void initializeMaze(){
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                mazegrid[i][j] = new MazeCellMaker();
-                mazegrid[i][j].isWall = true;
+                mazegrid[i][j] = new MazeCellMaker( true,true,false,false);
             }
         }
     }
@@ -166,13 +153,12 @@ public class MainActivity extends AppCompatActivity {
         List<int[]> frontier = new ArrayList<>();
         int start_row = 1 + 2 * rand.nextInt((rows - 1) / 2);
         int start_column = 1 + 2 * rand.nextInt((columns - 1) / 2);
-//        int start_row = 1;
-//        int start_column = 1;
 
         X_coordinates = start_row;
         Y_coordinates = start_column;
+        revealFog(X_coordinates,Y_coordinates);
 
-        mazegrid[start_row][start_column].isWall = false;
+        mazegrid[start_row][start_column].setWall(false);
         add_frontier(start_row, start_column, frontier);
 
         while (!frontier.isEmpty()) {
@@ -187,9 +173,9 @@ public class MainActivity extends AppCompatActivity {
                 int wall_row = (row + neighbor[0]) / 2;
                 int wall_column = (column + neighbor[1]) / 2;
 
-                mazegrid[row][column].isWall = false;
-                mazegrid[wall_row][wall_column].isWall = false;
-                mazegrid[neighbor[0]][neighbor[1]].isWall = false;
+                mazegrid[row][column].setWall(false);
+                mazegrid[wall_row][wall_column].setWall(false);
+                mazegrid[neighbor[0]][neighbor[1]].setWall(false);
 
                 add_frontier(row, column, frontier);
             }
@@ -203,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
             int next_row = row + d[0];
             int next_column = column + d[1];
 
-            if (isInBounds(next_row,next_column) && mazegrid[next_row][next_column].isWall) {
+            if (isInBounds(next_row,next_column) && mazegrid[next_row][next_column].isWall()) {
                 boolean alreadyInFrontier = false;
                 for (int[] f : frontier) {
                     if (f[0] == next_row && f[1] == next_column) {
@@ -219,17 +205,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private boolean isInBounds(int row, int column){
         return row > 0 && column > 0 && row<rows-1 && column <columns-1;
     }
+
 
     private List<int[]> getVisitedNeighbors(int row, int column){
         List<int[]> neighbors = new ArrayList<>();
         int [][] directions = {{2,0},{-2,0},{0,2},{0,-2}};
         for (int[] d : directions){
             int next_row = row + d[0], next_column = column + d[1];
-            if (isInBounds(next_row,next_column) && !mazegrid[next_row][next_column].isWall){
+            if (isInBounds(next_row,next_column) && !mazegrid[next_row][next_column].isWall()){
                 neighbors.add(new int[]{next_row,next_column});
             }
         }

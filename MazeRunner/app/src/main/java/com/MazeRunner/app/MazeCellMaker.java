@@ -1,28 +1,50 @@
 package com.MazeRunner.app;
 
 public class MazeCellMaker {
-    boolean isWall;
-    boolean isVisible;
-    boolean hasKey;
-    boolean isGoal;
-    boolean isVisited;
+    private  boolean isWall;
+    private boolean isVisible;
+//    private  boolean hasKey;
+    private boolean isGoal;
+    private boolean isVisited;
 //
-    boolean isStart;
-    boolean hasPlayer;
-    String item_type;
 
-    public MazeCellMaker(){
-        isWall = true;
-        isVisible = false;
-        hasKey = false;
-        isGoal = false;
-        isVisited = false;
-        isStart = false;
-        hasPlayer = false;
-        item_type = null;
+
+    public MazeCellMaker(boolean isWall, boolean isVisible, boolean isGoal, boolean isVisited) {
+        this.isWall = isWall;
+        this.isVisible = isVisible;
+        this.isGoal = isGoal;
+        this.isVisited = isVisited;
+    }
+
+    public boolean isWall() {
+        return isWall;
+    }
+
+    public void setWall(boolean wall) {
+        isWall = wall;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
     }
 
     public void setVisible(boolean visible) {
         isVisible = visible;
+    }
+
+    public boolean isGoal() {
+        return isGoal;
+    }
+
+    public void setGoal(boolean goal) {
+        isGoal = goal;
+    }
+
+    public boolean isVisited() {
+        return isVisited;
+    }
+
+    public void setVisited(boolean visited) {
+        isVisited = visited;
     }
 }

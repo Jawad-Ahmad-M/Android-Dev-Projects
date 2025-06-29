@@ -2,9 +2,12 @@ package com.MazeRunner.app;
 
 //import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+//import android.graphics.Color;
+//import android.graphics.Paint;
+import android.graphics.Rect;
 import android.view.View;
 
 
@@ -19,10 +22,18 @@ public class MazeView extends View {
         cellSize = Math.min(w / columns, h / rows);
     }
     private int playerX, playerY;
-    private final Paint wallPaint;
-    private final Paint pathPaint;
-    private final Paint playerPaint;
-    private final Paint goalPaint;
+//    private final Paint wallPaint;
+//    private final Paint pathPaint;
+//    private final Paint playerPaint;
+//    private final Paint goalPaint;
+//
+//    private final Paint fogPaint;
+
+    private final Bitmap wallBitmap;
+    private final Bitmap pathBitmap;
+    private final Bitmap goalBitmap;
+    private final Bitmap playerBitmap;
+//    private final Bitmap fogBitmap;
 
 
     public MazeView(Context context, MazeCellMaker[][] mazegrid, int rows, int columns, int playerX, int playerY) {
@@ -33,17 +44,26 @@ public class MazeView extends View {
         this.playerX = playerX;
         this.playerY = playerY;
 
-        wallPaint = new Paint();
-        wallPaint.setColor(Color.BLACK);
+        wallBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.wall);
+        pathBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.paths);
+        goalBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.cup_image);
+        playerBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.character);
+//        fogBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.fog);
 
-        pathPaint = new Paint();
-        pathPaint.setColor(Color.WHITE);
-
-        playerPaint = new Paint();
-        playerPaint.setColor(Color.RED);
-
-        goalPaint = new Paint();
-        goalPaint.setColor(Color.parseColor("#FFD700"));
+//        wallPaint = new Paint();
+//        wallPaint.setColor(Color.BLACK);
+//
+//        pathPaint = new Paint();
+//        pathPaint.setColor(Color.WHITE);
+//
+//        playerPaint = new Paint();
+//        playerPaint.setColor(Color.RED);
+//
+//        goalPaint = new Paint();
+//        goalPaint.setColor(Color.parseColor("#FFD700"));
+//
+//        fogPaint = new Paint();
+//        fogPaint.setColor(Color.parseColor("#808080"));
 
     }
 
@@ -55,23 +75,26 @@ public class MazeView extends View {
             for (int j = 0; j < columns; j++) {
                 float left = j * cellSize;
                 float top = i * cellSize;
-                float right = left + cellSize;
-                float bottom = top + cellSize;
 
-                if (mazegrid[i][j].isWall) {
-                    canvas.drawRect(left, top, right, bottom, wallPaint);
-                } else if (mazegrid[i][j].isGoal) {
-                    canvas.drawRect(left,top,right,bottom,goalPaint);
+                Rect dest = new Rect((int) left, (int) top, (int) (left + cellSize), (int) (top + cellSize));
+
+                if (!mazegrid[i][j].isVisible()) {
+//                    canvas.drawBitmap(fogBitmap, null, dest, null);
+                } else if (mazegrid[i][j].isWall()) {
+                    canvas.drawBitmap(wallBitmap, null, dest, null);
+                } else if (mazegrid[i][j].isGoal()) {
+                    canvas.drawBitmap(goalBitmap, null, dest, null);
                 } else {
-                    canvas.drawRect(left, top, right, bottom, pathPaint);
+                    canvas.drawBitmap(pathBitmap, null, dest, null);
                 }
 
                 if (i == playerX && j == playerY) {
-                    canvas.drawCircle(left + cellSize / 2, top + cellSize / 2, cellSize / 2, playerPaint);
+                    canvas.drawBitmap(playerBitmap, null, dest, null);
                 }
             }
         }
     }
+
 
     public void updatePlayerPosition(int x, int y) {
         this.playerX = x;
