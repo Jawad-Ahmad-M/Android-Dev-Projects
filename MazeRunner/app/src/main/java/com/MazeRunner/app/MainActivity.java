@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
         mazegrid = new MazeCellMaker[rows][columns];
         initializeMaze();
+//        revealBoundaryFog();
     }
 
 
@@ -143,9 +144,10 @@ public class MainActivity extends AppCompatActivity {
     private  void initializeMaze(){
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                mazegrid[i][j] = new MazeCellMaker( true,true,false,false);
+                mazegrid[i][j] = new MazeCellMaker( true,false,false,false);
             }
         }
+        revealBoundaryFog();
     }
 
     private void generate_Maze_with_Prims_algorithm() {
@@ -221,5 +223,17 @@ public class MainActivity extends AppCompatActivity {
         }
         return neighbors;
     }
+
+    private void revealBoundaryFog(){
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if ( i == 0 || j == 0 || i == rows-1 || j == columns-1){
+                    mazegrid[i][j].setVisible(true);
+                }
+            }
+        }
+    }
 }
+
+
 

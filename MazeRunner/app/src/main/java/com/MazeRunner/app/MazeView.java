@@ -10,30 +10,28 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.view.View;
 
+import org.jetbrains.annotations.NotNull;
+
 
 public class MazeView extends View {
     private final MazeCellMaker[][] mazegrid;
     private final int rows, columns;
     private float cellSize;
 
+    Rect destRect = new Rect();
+
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        cellSize = Math.min(w / columns, h / rows);
+    protected void onSizeChanged(int width, int height, int oldWeight, int oldHeight) {
+        super.onSizeChanged(width, height, oldWeight, oldHeight);
+        cellSize = Math.min(width / columns, height / rows);
     }
     private int playerX, playerY;
-//    private final Paint wallPaint;
-//    private final Paint pathPaint;
-//    private final Paint playerPaint;
-//    private final Paint goalPaint;
-//
-//    private final Paint fogPaint;
 
     private final Bitmap wallBitmap;
     private final Bitmap pathBitmap;
     private final Bitmap goalBitmap;
     private final Bitmap playerBitmap;
-//    private final Bitmap fogBitmap;
+    private final Bitmap fogBitmap;
 
 
     public MazeView(Context context, MazeCellMaker[][] mazegrid, int rows, int columns, int playerX, int playerY) {
@@ -48,8 +46,12 @@ public class MazeView extends View {
         pathBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.paths);
         goalBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.cup_image);
         playerBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.character);
-//        fogBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.fog);
+        fogBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.fog2);
 
+
+        /* If we want to use colors than these will be used
+        instead of bitmaps.
+         */
 //        wallPaint = new Paint();
 //        wallPaint.setColor(Color.BLACK);
 //
@@ -68,7 +70,7 @@ public class MazeView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NotNull Canvas canvas) {
         super.onDraw(canvas);
 
         for (int i = 0; i < rows; i++) {
@@ -76,20 +78,19 @@ public class MazeView extends View {
                 float left = j * cellSize;
                 float top = i * cellSize;
 
-                Rect dest = new Rect((int) left, (int) top, (int) (left + cellSize), (int) (top + cellSize));
+                destRect.set((int) left, (int) top, (int) (left + cellSize), (int) (top + cellSize));
 
                 if (!mazegrid[i][j].isVisible()) {
-//                    canvas.drawBitmap(fogBitmap, null, dest, null);
+                    canvas.drawBitmap(fogBitmap, null, destRect, null);
                 } else if (mazegrid[i][j].isWall()) {
-                    canvas.drawBitmap(wallBitmap, null, dest, null);
+                    canvas.drawBitmap(wallBitmap, null, destRect, null);
                 } else if (mazegrid[i][j].isGoal()) {
-                    canvas.drawBitmap(goalBitmap, null, dest, null);
-                } else {
-                    canvas.drawBitmap(pathBitmap, null, dest, null);
+                    canvas.drawBitmap(goalBitmap, null, destRect, null);
+                }else  {
+                    canvas.drawBitmap(pathBitmap, null, destRect, null);
                 }
-
                 if (i == playerX && j == playerY) {
-                    canvas.drawBitmap(playerBitmap, null, dest, null);
+                    canvas.drawBitmap(playerBitmap, null, destRect, null);
                 }
             }
         }
