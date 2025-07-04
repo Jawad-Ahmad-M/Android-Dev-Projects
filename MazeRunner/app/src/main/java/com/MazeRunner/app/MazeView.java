@@ -46,10 +46,10 @@ public class MazeView extends View {
 
         wallBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.wall);
         pathBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.paths);
-        goalBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.cup_image);
+        goalBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.wincup);
         playerBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.character);
         fogBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.fog2);
-        itemBitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.keybitmap);
+        itemBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.item);
 
         /* If we want to use colors than these will be used
         instead of bitmaps.
@@ -88,7 +88,9 @@ public class MazeView extends View {
                     canvas.drawBitmap(wallBitmap, null, destRect, null);
                 } else if (mazegrid[i][j].isGoal()) {
                     canvas.drawBitmap(goalBitmap, null, destRect, null);
-                }else  {
+                } else if (mazegrid[i][j].isHasItem()) {
+                    canvas.drawBitmap(itemBitmap, null, destRect, null);
+                } else {
                     canvas.drawBitmap(pathBitmap, null, destRect, null);
                 }
                 if (i == playerX && j == playerY) {

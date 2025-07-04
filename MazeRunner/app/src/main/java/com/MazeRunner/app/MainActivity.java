@@ -4,8 +4,11 @@ package com.MazeRunner.app;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
 //import android.view.View;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -29,9 +32,15 @@ public class MainActivity extends AppCompatActivity {
     private int rows,columns;
 
     private static final int  NO_OF_ITEMS = 3;
+    private  int NO_OF_KEYS_COLLECTED = 0;
+    int[] goalCoordinates;
+
+    private final ToneGenerator toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC,100);
     Random rand = new Random();
 
     private void new_mazes(int scale){
+        NO_OF_KEYS_COLLECTED = 0;
+        goalCoordinates = new int[]{};
         initializeMazeGame(scale,scale);
         generateMazeWithPrimsAlgorithm();
 
@@ -43,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
         FrameLayout mazeContainer = findViewById(R.id.frame_layout_container_for_maze);
         mazeContainer.removeAllViews();
         mazeContainer.addView(mazeView);
-        placeGoalCell();
+        placeItemCells();
+        goalCoordinates = placeGoalCell();
     }
 
     @Override
@@ -85,21 +95,23 @@ public class MainActivity extends AppCompatActivity {
             || mazegrid[itemRow][itemColumn].isWall()
             || (itemRow == xCoordinates && itemColumn == yCoordinates)
             ||  usedPositions.contains(itemRow + "," + itemColumn)){
-                mazegrid[itemRow][itemColumn].setHasItem(true);
-                usedPositions.add(itemRow + "," + itemColumn);
-                placed++;
+                continue;
             }
+            mazegrid[itemRow][itemColumn].setHasItem(true);
+            usedPositions.add(itemRow + "," + itemColumn);
+            placed++;
         }
 
     }
 
-    private void placeGoalCell(){
+    private int[]  placeGoalCell(){
         int goalRow = 1 + 2 * rand.nextInt((rows - 1) / 2);
         int goalColumn = 1 + 2 * rand.nextInt((columns - 1) / 2);
         if (xCoordinates != goalRow || yCoordinates != goalColumn){
-            mazegrid[(goalRow)][goalColumn].setGoal(true);
+//            mazegrid[(goalRow)][goalColumn].setGoal(true);
+            return new int[]{goalRow,goalColumn};
         } else{
-            placeGoalCell();
+            return placeGoalCell();
         }
     }
 
@@ -139,11 +151,30 @@ public class MainActivity extends AppCompatActivity {
             
             if (mazegrid[xCoordinates][yCoordinates].isGoal()){
                 Toast.makeText(this, "\uD83C\uDFAF You reached the goal! Level Complete!", Toast.LENGTH_SHORT).show();
+                toneGenerator.startTone(ToneGenerator.TONE_CDMA_CONFIRM, 200);
+                new Handler().postDelayed(() -> {
+                    toneGenerator.startTone(ToneGenerator.TONE_CDMA_ONE_MIN_BEEP, 300);
+                }, 300);
                 new_mazes(scale);
+            }
+            else if (mazegrid[xCoordinates][yCoordinates].isHasItem()) {
+                mazegrid[xCoordinates][yCoordinates].setHasItem(false);
+                toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP2,200);
+                NO_OF_KEYS_COLLECTED++;
+
+                if (NO_OF_KEYS_COLLECTED == NO_OF_ITEMS) {
+                    int goalRow = goalCoordinates[0];
+                    int goalColumn = goalCoordinates[1];
+                    mazegrid[goalRow][goalColumn].setGoal(true);
+                    revealFog(goalRow, goalColumn);
+                    Toast.makeText(this, "✨ All keys collected! Goal is now revealed!", Toast.LENGTH_SHORT).show();
+                }
+
             }
         }
         else{
-            Toast.makeText(this, "There is wall ahead, Can't Move There.",Toast.LENGTH_LONG).show();
+            toneGenerator.startTone(ToneGenerator.TONE_SUP_ERROR,200);
+//            Toast.makeText(this, "There is wall ahead, Can't Move There.",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -163,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
     private  void initializeMaze(){
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                mazegrid[i][j] = new MazeCellMaker( true,false,false,false,false);
+                mazegrid[i][j] = new MazeCellMaker( true,false,false,false,false,false);
             }
         }
         revealBoundaryFog();
