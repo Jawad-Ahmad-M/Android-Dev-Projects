@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Maze Runner</string>
+    <string name="app_name">Maze-Runner</string>
     <string name="maze_runner">Maze Runner</string>
     <string name="right">→</string>
     <string name="down">↓</string>

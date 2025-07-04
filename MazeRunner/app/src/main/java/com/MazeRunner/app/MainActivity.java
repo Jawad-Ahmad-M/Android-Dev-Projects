@@ -65,16 +65,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         new_mazes(scale);
 
-        Button btn_up = findViewById(R.id.btnUp);
-        Button btn_down = findViewById(R.id.btnDown);
-        Button btn_left = findViewById(R.id.btnLeft);
-        Button btn_right = findViewById(R.id.btnRight);
+        Button btnUp = findViewById(R.id.btnUp);
+        Button btnDown = findViewById(R.id.btnDown);
+        Button btnLeft = findViewById(R.id.btnLeft);
+        Button btnRight = findViewById(R.id.btnRight);
         Button btnBack = findViewById(R.id.btnBack);
 
-        btn_up.setOnClickListener(v -> movement("up"));
-        btn_down.setOnClickListener(v -> movement("down"));
-        btn_right.setOnClickListener(v -> movement("right"));
-        btn_left.setOnClickListener(v -> movement("left"));
+        btnUp.setOnClickListener(v -> movement("up"));
+        btnDown.setOnClickListener(v -> movement("down"));
+        btnRight.setOnClickListener(v -> movement("right"));
+        btnLeft.setOnClickListener(v -> movement("left"));
 
         btnBack.setOnClickListener(v -> {
             Intent setDifficultyLevelActivity = new Intent(MainActivity.this, difficultyLevelScreen.class);

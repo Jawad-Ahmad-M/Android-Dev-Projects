@@ -25,9 +25,9 @@ public class difficultyLevelScreen extends AppCompatActivity {
         Button difficultyUltraHard = findViewById(R.id.btnUltraHard);
 
         buttonFunctions(difficultyEasy,9);
-        buttonFunctions(difficultyStandard,19);
-        buttonFunctions(difficultyDifficult,29);
-        buttonFunctions(difficultyUltraHard,39);
+        buttonFunctions(difficultyStandard,15);
+        buttonFunctions(difficultyDifficult,21);
+        buttonFunctions(difficultyUltraHard,27);
     }
 
 
