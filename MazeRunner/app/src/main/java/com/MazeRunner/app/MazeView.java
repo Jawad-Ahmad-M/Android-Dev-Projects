@@ -32,6 +32,8 @@ public class MazeView extends View {
     private final Bitmap goalBitmap;
     private final Bitmap playerBitmap;
     private final Bitmap fogBitmap;
+    private final Bitmap itemBitmap;
+
 
 
     public MazeView(Context context, MazeCellMaker[][] mazegrid, int rows, int columns, int playerX, int playerY) {
@@ -47,7 +49,7 @@ public class MazeView extends View {
         goalBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.cup_image);
         playerBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.character);
         fogBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.fog2);
-
+        itemBitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.keybitmap);
 
         /* If we want to use colors than these will be used
         instead of bitmaps.

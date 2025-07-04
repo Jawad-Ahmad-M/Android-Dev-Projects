@@ -22,18 +22,20 @@ public class MainActivity extends AppCompatActivity {
     private  MazeCellMaker[][] mazegrid;
 
     int scale;
-    int X_coordinates;
-    int Y_coordinates;
+    int xCoordinates;
+    int yCoordinates;
     private MazeView mazeView;
 
     private int rows,columns;
+
+    private static final int  NO_OF_ITEMS = 3;
     Random rand = new Random();
 
     private void new_mazes(int scale){
-        initialize_Maze_Game(scale,scale);
-        generate_Maze_with_Prims_algorithm();
+        initializeMazeGame(scale,scale);
+        generateMazeWithPrimsAlgorithm();
 
-        mazeView = new MazeView(this, mazegrid,rows,columns,X_coordinates,Y_coordinates);
+        mazeView = new MazeView(this, mazegrid,rows,columns, xCoordinates, yCoordinates);
         mazeView.setLayoutParams(new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         FrameLayout mazeContainer = findViewById(R.id.frame_layout_container_for_maze);
         mazeContainer.removeAllViews();
         mazeContainer.addView(mazeView);
-        place_goal_cell();
+        placeGoalCell();
     }
 
     @Override
@@ -64,23 +66,40 @@ public class MainActivity extends AppCompatActivity {
         btn_right.setOnClickListener(v -> movement("right"));
         btn_left.setOnClickListener(v -> movement("left"));
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent setDifficultyLevelActivity = new Intent(MainActivity.this, difficultyLevelScreen.class);
-                startActivity(setDifficultyLevelActivity);
-            }
+        btnBack.setOnClickListener(v -> {
+            Intent setDifficultyLevelActivity = new Intent(MainActivity.this, difficultyLevelScreen.class);
+            startActivity(setDifficultyLevelActivity);
         });
     }
 
 
-    private void place_goal_cell(){
-        int goal_row = 1 + 2 * rand.nextInt((rows - 1) / 2);
-        int goal_column = 1 + 2 * rand.nextInt((columns - 1) / 2);
-        if (X_coordinates != goal_row || Y_coordinates != goal_column){
-            mazegrid[(goal_row)][goal_column].setGoal(true);
+    private void placeItemCells(){
+        int placed = 0;
+        List<String> usedPositions = new ArrayList<>();
+
+        while (placed < NO_OF_ITEMS){
+            int itemRow = 1 + rand.nextInt(rows-1);
+            int itemColumn = 1 + rand.nextInt(columns - 1);
+
+            if (mazegrid[itemRow][itemColumn].isGoal()
+            || mazegrid[itemRow][itemColumn].isWall()
+            || (itemRow == xCoordinates && itemColumn == yCoordinates)
+            ||  usedPositions.contains(itemRow + "," + itemColumn)){
+                mazegrid[itemRow][itemColumn].setHasItem(true);
+                usedPositions.add(itemRow + "," + itemColumn);
+                placed++;
+            }
+        }
+
+    }
+
+    private void placeGoalCell(){
+        int goalRow = 1 + 2 * rand.nextInt((rows - 1) / 2);
+        int goalColumn = 1 + 2 * rand.nextInt((columns - 1) / 2);
+        if (xCoordinates != goalRow || yCoordinates != goalColumn){
+            mazegrid[(goalRow)][goalColumn].setGoal(true);
         } else{
-            place_goal_cell();
+            placeGoalCell();
         }
     }
 
@@ -96,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void movement(String direction){
-        int new_X = X_coordinates;
-        int new_Y = Y_coordinates;
+        int new_X = xCoordinates;
+        int new_Y = yCoordinates;
         switch (direction) {
             case "up":
                 new_X = new_X - 1;
@@ -113,12 +132,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         if (isInBounds(new_X,new_Y) && !mazegrid[new_X][new_Y].isWall()){
-            X_coordinates = new_X;
-            Y_coordinates = new_Y;
-            mazeView.updatePlayerPosition(X_coordinates,Y_coordinates);
-            revealFog(X_coordinates,Y_coordinates);
+            xCoordinates = new_X;
+            yCoordinates = new_Y;
+            mazeView.updatePlayerPosition(xCoordinates, yCoordinates);
+            revealFog(xCoordinates, yCoordinates);
             
-            if (mazegrid[X_coordinates][Y_coordinates].isGoal()){
+            if (mazegrid[xCoordinates][yCoordinates].isGoal()){
                 Toast.makeText(this, "\uD83C\uDFAF You reached the goal! Level Complete!", Toast.LENGTH_SHORT).show();
                 new_mazes(scale);
             }
@@ -130,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public void initialize_Maze_Game(int rows, int columns){
+    public void initializeMazeGame(int rows, int columns){
         this.rows = rows;
         this.columns = columns;
 
@@ -144,24 +163,24 @@ public class MainActivity extends AppCompatActivity {
     private  void initializeMaze(){
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                mazegrid[i][j] = new MazeCellMaker( true,false,false,false);
+                mazegrid[i][j] = new MazeCellMaker( true,false,false,false,false);
             }
         }
         revealBoundaryFog();
     }
 
-    private void generate_Maze_with_Prims_algorithm() {
+    private void generateMazeWithPrimsAlgorithm() {
 
         List<int[]> frontier = new ArrayList<>();
         int start_row = 1 + 2 * rand.nextInt((rows - 1) / 2);
         int start_column = 1 + 2 * rand.nextInt((columns - 1) / 2);
 
-        X_coordinates = start_row;
-        Y_coordinates = start_column;
-        revealFog(X_coordinates,Y_coordinates);
+        xCoordinates = start_row;
+        yCoordinates = start_column;
+        revealFog(xCoordinates, yCoordinates);
 
         mazegrid[start_row][start_column].setWall(false);
-        add_frontier(start_row, start_column, frontier);
+        addFrontier(start_row, start_column, frontier);
 
         while (!frontier.isEmpty()) {
             int[] wall = frontier.remove(rand.nextInt(frontier.size()));
@@ -172,35 +191,35 @@ public class MainActivity extends AppCompatActivity {
 
             if (!neighbors.isEmpty()) {
                 int[] neighbor = neighbors.get(rand.nextInt(neighbors.size()));
-                int wall_row = (row + neighbor[0]) / 2;
-                int wall_column = (column + neighbor[1]) / 2;
+                int wallRow = (row + neighbor[0]) / 2;
+                int wallColumn = (column + neighbor[1]) / 2;
 
                 mazegrid[row][column].setWall(false);
-                mazegrid[wall_row][wall_column].setWall(false);
+                mazegrid[wallRow][wallColumn].setWall(false);
                 mazegrid[neighbor[0]][neighbor[1]].setWall(false);
 
-                add_frontier(row, column, frontier);
+                addFrontier(row, column, frontier);
             }
         }
     }
 
 
-    private void add_frontier(int row, int column, List<int[]> frontier){
+    private void addFrontier(int row, int column, List<int[]> frontier){
         int[][] directions = {{2,0},{0,2},{-2,0},{0,-2}};
         for (int[] d : directions){
-            int next_row = row + d[0];
-            int next_column = column + d[1];
+            int nextRow = row + d[0];
+            int nextColumn = column + d[1];
 
-            if (isInBounds(next_row,next_column) && mazegrid[next_row][next_column].isWall()) {
+            if (isInBounds(nextRow,nextColumn) && mazegrid[nextRow][nextColumn].isWall()) {
                 boolean alreadyInFrontier = false;
                 for (int[] f : frontier) {
-                    if (f[0] == next_row && f[1] == next_column) {
+                    if (f[0] == nextRow && f[1] == nextColumn) {
                         alreadyInFrontier = true;
                         break;
                     }
                 }
                 if (!alreadyInFrontier) {
-                    frontier.add(new int[]{next_row,next_column});
+                    frontier.add(new int[]{nextRow,nextColumn});
                 }
             }
         }

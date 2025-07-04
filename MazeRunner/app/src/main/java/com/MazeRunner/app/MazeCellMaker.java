@@ -6,14 +6,25 @@ public class MazeCellMaker {
 //    private  boolean hasKey;
     private boolean isGoal;
     private boolean isVisited;
+
+    private boolean hasItem;
 //
 
 
-    public MazeCellMaker(boolean isWall, boolean isVisible, boolean isGoal, boolean isVisited) {
+    public MazeCellMaker(boolean isWall, boolean isVisible, boolean isGoal, boolean isVisited,boolean hasItem) {
         this.isWall = isWall;
         this.isVisible = isVisible;
         this.isGoal = isGoal;
         this.isVisited = isVisited;
+        this.hasItem = hasItem;
+    }
+
+    public boolean isHasItem() {
+        return hasItem;
+    }
+
+    public void setHasItem(boolean hasItem) {
+        this.hasItem = hasItem;
     }
 
     public boolean isWall() {
