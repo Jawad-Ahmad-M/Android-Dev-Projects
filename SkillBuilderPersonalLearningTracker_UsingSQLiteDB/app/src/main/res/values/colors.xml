@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="yellow">#FFEB3B</color>
+
+    <color name="card_total_skills">#E3F2FD</color>        <!-- Light Blue -->
+    <color name="card_completed_skills">#E8F5E9</color>    <!-- Light Green -->
+    <color name="card_substeps">#FFF3E0</color>            <!-- Light Orange -->
+    <color name="card_progress">#F3E5F5</color>            <!-- Light Purple -->
+
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+
+
+</resources>

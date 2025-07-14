@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/skill_list_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.SkillListFragment">
+
+    <TextView
+        android:id="@+id/tv_title_Skill_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="@string/list_of_all_skills"
+        android:layout_alignParentTop="true"
+        android:textStyle="bold"
+        android:gravity="center|center_vertical"
+        android:paddingTop="4sp"/>
+
+    <!-- RecyclerView to display the list of skills -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewSkills"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tv_title_Skill_list"
+        android:padding="16dp"
+        android:clipToPadding="false"
+        tools:listitem="@layout/item_skill" />
+
+    <!-- Floating Action Button to add a new skill -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddSkill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_input_add"
+        android:contentDescription="@string/add_skill"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/button_load_sample_data_from_assets"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="16dp"
+        android:text="@string/load_sample_data" />
+
+</RelativeLayout>

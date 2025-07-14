@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="24dp"
+    android:orientation="vertical"
+    android:layout_gravity="center">
+
+    <EditText
+        android:id="@+id/editTextSkillName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="name_skill"
+        android:hint="@string/skill_name"
+        android:textSize="20sp"
+        android:maxWidth="100sp"
+        android:inputType="textCapWords" />
+
+
+    <Button
+        android:id="@+id/buttonAddSkill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/add_skill"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp" />
+</LinearLayout>
